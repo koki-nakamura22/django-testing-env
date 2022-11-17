@@ -1,0 +1,28 @@
+version: "3"
+services:
+  web:
+    container_name: python-test-app-with-docker
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8000
+    working_dir: /code
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+  db:
+    container_name: python-test-app-with-docker-db
+    image: mysql:5.7
+    restart: always
+    # TODO: Must export the database connection information
+    environment:
+      MYSQL_DATABASE: testdb
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: db-user
+      MYSQL_PASSWORD: db-pass
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ports:
+      - 13306:3306
